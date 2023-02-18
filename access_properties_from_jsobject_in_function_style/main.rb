@@ -3,12 +3,18 @@ require "js"
 class JS::Object
   def method_missing(sym, *args, &block)
     ret = self[sym]
-  
+
     case ret.typeof
+    when "undefined"
+      str = sym.to_s
+      if str[-1] == "="
+        self[str.chop.to_sym] = args[0]
+        return args[0]
+      end
+
+      super
     when "function"
       self.call(sym, *args, &block).to_r
-    when "undefined"
-      super
     else
       ret.to_r
     end
@@ -31,15 +37,16 @@ class JS::Object
   end
 end
 
-document = JS.global[:document]
-content = document.querySelector('div#content')
+# Get propery via getter
+p "src".length
 
-content[:innerHTML] = <<~HTML
+# Set propery via setter
+content = JS.global.document.querySelector('div#content')
+content.innerHTML = <<~HTML
   <div class="info">
-    <p>Powered by <a href="https://github.com/ruby/ruby.wasm">ruby.wasm</a> (<a href="https://ruby.github.io/ruby.wasm/">doc</a>)</p>
-    <p>#{RUBY_DESCRIPTION}</p>
-  </div>
+    <p>Powered by <a href="https://github.com/ruby/ruby.wasm">ruby.wasm</a></p>
   </div>
 HTML
 
-p content.innerHTML
+# Add to property
+content.innerHTML += "<div><p>#{RUBY_DESCRIPTION}</p></div>"
