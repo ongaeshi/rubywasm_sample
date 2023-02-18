@@ -8,8 +8,8 @@ class JS::Object
     when "undefined"
       str = sym.to_s
       if str[-1] == "="
-        self[str.chop.to_sym] = args[0]
-        return args[0]
+        self[str.chop.to_sym] = args.first
+        return args.first
       end
 
       super
