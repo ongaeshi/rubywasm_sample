@@ -53,15 +53,21 @@ class SwissGL
     @obj[:glsl] = JS.global.SwissGL(canvas_gl)
   end
 
-  def call(params, code)
+  def call(params, code = nil, target = nil)
     # process arguments
-    # if (typeof params === 'string') {
-    #     [params, code, target] = [{}, params, code];
-    # } else if (code === undefined) {
-    #     [params, code, target] = [{}, '', params];
-    # }
+    if params.is_a?(String)
+      params, code, target = {}, params, code
+    elsif code.nil?
+      params, code, target = {}, "", params
+    end
 
-    @obj.glsl(params.to_js, code)
+    if target.nil?
+      @obj.glsl(params.to_js, code)
+    elsif target.is_a?(Hash)
+      @obj.glsl(params.to_js, code, target.to_js)
+    else
+      @obj.glsl(params.to_js, code, target)
+    end
   end
 end
 
