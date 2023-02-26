@@ -1,0 +1,13 @@
+<script src="swissgl.js"></script>
+<canvas id="c" width="600" height="400"></canvas>
+<script>
+    const canvas = document.getElementById('c');
+    const glsl = SwissGL(canvas);
+
+    function render(t) {
+        t /= 1000; // ms to sec
+        glsl({t}, `UV,cos(t*TAU),1`);
+        requestAnimationFrame(render);
+    }
+    render();
+</script>
