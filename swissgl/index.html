@@ -6,7 +6,8 @@
 
     function render(t) {
         t /= 1000; // ms to sec
-        glsl({t}, `UV,cos(t*TAU),1`);
+        params = {t: t*0.5};
+        glsl(params, `UV,cos(t*TAU),1`);
         requestAnimationFrame(render);
     }
     render();
