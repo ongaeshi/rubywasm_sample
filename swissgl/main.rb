@@ -41,12 +41,21 @@ $JS = JS.global
 canvas = $JS.document.getElementById('c')
 $JS.glsl = $JS.SwissGL(canvas)
 
+class Hash
+  def to_js
+    js = JS.eval("return {}")
+    self.each do |k, v|
+      js[k] = v
+    end
+    js
+  end
+end
+
 def render(t)
   t = t / 1000; # ms to sec
-  params = JS.eval("return {t: #{t*0.5}}")
-  $JS.glsl(params, "UV,cos(t*TAU),1")
+  $JS.glsl({t:}.to_js, "UV,cos(t*TAU),1")
   $JS.requestAnimationFrame(->(t) { render(t.to_r) });
 end
 
-render(0)
+render(rand * 1000)
 
