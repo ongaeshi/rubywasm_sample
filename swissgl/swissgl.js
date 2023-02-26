@@ -152,6 +152,8 @@ const glsl_utils = `
 const float PI  = radians(180.0);
 const float TAU = radians(360.0);
 
+// source: https://www.shadertoy.com/view/XlXcW4
+// TODO more complete hash library
 vec3 hash( ivec3 ix ) {
     uvec3 x = uvec3(ix);
     const uint k = 1103515245U;
@@ -167,8 +169,24 @@ mat2 rot2(float a) {
 }
 
 vec3 uv2sphere(vec2 uv) {
-  uv *= vec2(TAU, PI);
+  uv *= vec2(-TAU,PI);
   return vec3(vec2(cos(uv.x), sin(uv.x))*sin(uv.y), cos(uv.y));
+}
+
+vec3 _surf_f(vec3 p, vec3 a, vec3 b, out vec3 normal) {
+    normal = normalize(cross(a-p, b-p));
+    return p;
+}
+#define SURF(f, uv, out_normal, eps) _surf_f(f(uv), f(uv+vec2(eps,0)), f(uv+vec2(0,eps)), out_normal)
+
+vec3 cubeVert(vec2 xy, int side) {
+    float x=xy.x, y=xy.y;
+    switch (side) {
+        case 0: return vec3(x,y,1); case 1: return vec3(y,x,-1);
+        case 2: return vec3(y,1,x); case 3: return vec3(x,-1,y);
+        case 4: return vec3(1,x,y); case 5: return vec3(-1,y,x);
+    };
+    return vec3(0.0);
 }
 
 vec4 _sample(sampler2D tex, vec2 uv) {return texture(tex, uv);}
@@ -217,9 +235,7 @@ function expandCode(code) {
     if (code.indexOf('//FRAG') == -1) {
         code = `
         //VERT
-        vec4 vertex() {
-          return vec4(UV*2.0-1.0, 0.0, 1.0);
-        }
+        vec4 vertex() {return vec4(XY, 0.0, 1.0);}
         //FRAG
         ${code}`;
     }
@@ -539,7 +555,7 @@ function drawQuads(self, params, code, target) {
 
 function SwissGL(canvas_gl, {include=''}={}) {
     const gl = canvas_gl.getContext ?
-        canvas_gl.getContext('webgl2') : canvas_gl;
+        canvas_gl.getContext('webgl2', {alpha:false}) : canvas_gl;
     gl.getExtension("EXT_color_buffer_float");
     gl.getExtension("OES_texture_float_linear");
     ensureVertexArray(gl, 1024);
