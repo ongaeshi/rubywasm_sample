@@ -37,10 +37,6 @@ class JS::Object
   end
 end
 
-$JS = JS.global
-canvas = $JS.document.getElementById('c')
-$JS.glsl = $JS.SwissGL(canvas)
-
 class Hash
   def to_js
     js = JS.eval("return {}")
@@ -51,9 +47,31 @@ class Hash
   end
 end
 
+class SwissGL
+  def initialize(canvas_gl)
+    @obj = JS.eval("return {}")
+    @obj[:glsl] = JS.global.SwissGL(canvas_gl)
+  end
+
+  def call(params, code)
+    # process arguments
+    # if (typeof params === 'string') {
+    #     [params, code, target] = [{}, params, code];
+    # } else if (code === undefined) {
+    #     [params, code, target] = [{}, '', params];
+    # }
+
+    @obj.glsl(params.to_js, code)
+  end
+end
+
+$JS = JS.global
+canvas = $JS.document.getElementById('c')
+$glsl = SwissGL.new(canvas)
+
 def render(t)
   t = t / 1000; # ms to sec
-  $JS.glsl({t:}.to_js, "UV,cos(t*TAU),1")
+  $glsl.call({t:}, "UV,cos(t*TAU),1")
   $JS.requestAnimationFrame(->(t) { render(t.to_r) });
 end
 
