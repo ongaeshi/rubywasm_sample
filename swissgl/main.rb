@@ -48,14 +48,24 @@ end
 canvas = JS.global[:document].getElementById('c')
 $glsl = SwissGL.new(canvas)
 
-# Hello
+# # Hello
+# def render(t)
+#   t = t / 1000; # ms to sec
+#   $glsl.call({t:}, "UV,cos(t*TAU),1")
+#   # $glsl.call({t:, k:9}, "1-((I.x+int(t*40.))/4^(I.y+int(t*20.))/4)%int(k)");
+#   JS.global.requestAnimationFrame(->(t) { render(t.to_f) })
+# end
+
+# render(0)
+
+# Bit Field
 def render(t)
   t = t / 1000; # ms to sec
-  $glsl.call({t:}, "UV,cos(t*TAU),1")
+  $glsl.call({t:, k:9}, "1-((I.x+int(t*40.))/4^(I.y+int(t*20.))/4)%int(k)");
   JS.global.requestAnimationFrame(->(t) { render(t.to_f) })
 end
 
-render(rand * 1000)
+render(0)
 
 # Particle life
 # K = 6 # number of particle types
