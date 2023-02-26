@@ -543,7 +543,7 @@ function SwissGL(canvas_gl, {include=''}={}) {
     gl.getExtension("EXT_color_buffer_float");
     gl.getExtension("OES_texture_float_linear");
     ensureVertexArray(gl, 1024);
-    function glsl(params, codeh, target) {
+    function glsl(params, code, target) {
         return drawQuads(glsl, params, code, target)
     };
     glsl.gl = gl;
