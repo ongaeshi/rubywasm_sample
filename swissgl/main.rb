@@ -52,7 +52,7 @@ $glsl = SwissGL.new(canvas)
 def render(t)
   t = t / 1000; # ms to sec
   $glsl.call({t:}, "UV,cos(t*TAU),1")
-  JS.global.requestAnimationFrame(->(t) { render(t.to_f) });
+  JS.global.requestAnimationFrame(->(t) { render(t.to_f) })
 end
 
 render(rand * 1000)
