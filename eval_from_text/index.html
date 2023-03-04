@@ -1,7 +1,7 @@
 <html>
   <!-- Load `buffer` -->
   <script src="https://bundle.run/buffer@6.0.3"></script>
-  <script src="https://cdn.jsdelivr.net/npm/ruby-3_2-wasm-wasi@1.0.1-2023-02-10-a/dist/browser.umd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ruby-3_2-wasm-wasi@next/dist/browser.umd.js"></script>
   <!-- <script src="https://cdn.jsdelivr.net/npm/ruby-3_2-wasm-wasi@1.0.1-2023-02-09-a/dist/browser.umd.js"></script> -->
   <script src="https://cdn.jsdelivr.net/npm/p5@1.5.0/lib/p5.js"></script>
   <script>
@@ -16,7 +16,7 @@
         //      Tips: Replace the binary with debug info if you want symbolicated stack trace.
         //      (only nightly release for now)
         //      "https://cdn.jsdelivr.net/npm/ruby-3_2-wasm-wasi@next/dist/ruby.debug+stdlib.wasm"
-        "https://cdn.jsdelivr.net/npm/ruby-3_2-wasm-wasi@1.0.1-2023-02-09-a/dist/ruby.wasm"
+        "https://cdn.jsdelivr.net/npm/ruby-3_2-wasm-wasi@next/dist/ruby.wasm"
       );
       const buffer = await response.arrayBuffer();
       const module = await WebAssembly.compile(buffer);
