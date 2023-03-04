@@ -1,5 +1,6 @@
 <html>
   <script src="https://cdn.jsdelivr.net/npm/ruby-3_2-wasm-wasi@1.0.1-2023-02-09-a/dist/browser.umd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.5.0/lib/p5.js"></script>
   <script>
     const { DefaultRubyVM } = window["ruby-wasm-wasi"];
     const main = async () => {
@@ -14,15 +15,27 @@
       const module = await WebAssembly.compile(buffer);
       const { vm } = await DefaultRubyVM(module);
 
+      const p5 = await fetch("p5.rb");
+      const t = await p5.text();
+      vm.eval(t);
+
       vm.printVersion();
       vm.eval(`
-        require "js"
-        luckiness = ["Lucky", "Unlucky"].sample
-        JS::eval("document.body.innerText = '#{luckiness}'")
+def setup
+  createCanvas(710, 400)
+end
+
+def draw
+   background(204, 153, 0)
+end
+
+P5::init
       `);
     };
 
     main();
   </script>
-  <body></body>
+  <body>
+    <main></main>
+  </body>
 </html>
