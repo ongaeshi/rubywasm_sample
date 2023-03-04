@@ -1,7 +1,12 @@
 <html>
-  <script src="https://cdn.jsdelivr.net/npm/ruby-3_2-wasm-wasi@1.0.1-2023-02-09-a/dist/browser.umd.js"></script>
+  <!-- Load `buffer` -->
+  <script src="https://bundle.run/buffer@6.0.3"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ruby-3_2-wasm-wasi@1.0.1-2023-02-10-a/dist/browser.umd.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/ruby-3_2-wasm-wasi@1.0.1-2023-02-09-a/dist/browser.umd.js"></script> -->
   <script src="https://cdn.jsdelivr.net/npm/p5@1.5.0/lib/p5.js"></script>
   <script>
+    // Expose `Buffer` into the global.
+    window.Buffer = window['buffer'].Buffer;
     const { DefaultRubyVM } = window["ruby-wasm-wasi"];
     const globalData = {};
 
