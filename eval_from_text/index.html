@@ -3,6 +3,8 @@
   <script src="https://cdn.jsdelivr.net/npm/p5@1.5.0/lib/p5.js"></script>
   <script>
     const { DefaultRubyVM } = window["ruby-wasm-wasi"];
+    const globalData = {};
+
     const main = async () => {
       // Fetch and instantiate WebAssembly binary
       const response = await fetch(
@@ -15,6 +17,8 @@
       const module = await WebAssembly.compile(buffer);
       const { vm } = await DefaultRubyVM(module);
 
+      globalData.vm = vm;
+
       const p5 = await fetch("p5.rb");
       const t = await p5.text();
       vm.eval(t);
@@ -26,7 +30,7 @@ def setup
 end
 
 def draw
-   background(204, 153, 0)
+  background(204, 153, 0)
 end
 
 P5::init
@@ -34,8 +38,24 @@ P5::init
     };
 
     main();
+
+    const runScript = () => {
+      let s = document.querySelector("textarea").value
+      globalData.vm.eval(s + "\nP5::init");  
+    }
   </script>
   <body>
+    <textarea cols="40" rows="10">
+def setup
+  createCanvas(710, 400)
+end
+
+def draw
+  background(100, 153, 0)
+  line(100, 100, 200, 200)
+end    
+    </textarea>
+    <button onclick="runScript()">Run</button>
     <main></main>
   </body>
 </html>
